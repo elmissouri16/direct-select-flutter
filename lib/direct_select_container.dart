@@ -178,7 +178,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   Widget _getListWidget() {
     var paddingLeft = 0.0;
 
-    if (_currentList.items.isNotEmpty) {
+    if (_currentList.items!.isNotEmpty) {
       Rect? rect = RectGetter.getRectFromKey(
           _currentList.paddingItemController.paddingGlobalKey);
       if (rect != null) {
@@ -194,12 +194,12 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         child: ListView.builder(
           padding: EdgeInsets.only(left: paddingLeft),
           controller: _scrollController,
-          itemCount: _currentList.items.length + 2,
+          itemCount: _currentList.items!.length + 2,
           itemBuilder: (BuildContext context, int index) {
-            if (index == 0 || index == _currentList.items.length + 1) {
+            if (index == 0 || index == _currentList.items!.length + 1) {
               return Container(height: listPadding);
             }
-            final item = _currentList.items[index - 1];
+            final item = _currentList.items![index - 1];
             final normalScale = 1.0;
             if (lastSelectedItem == index - 1) {
               item.updateScale(_calculateNewScale(normalScale));
@@ -250,7 +250,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   double _allowedDragDistance(double currentScrollOffset, double position) {
     double newPosition = currentScrollOffset + position;
     double endOfListPosition =
-        (_currentList.items.length - 1) * _currentList.itemHeight() +
+        (_currentList.items!.length - 1) * _currentList.itemHeight() +
             listPadding;
     if (newPosition < listPadding) {
       return listPadding - currentScrollOffset;
@@ -271,21 +271,21 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     double neighbourDistanceToCurrentItem =
         _getNeighbourListElementDistanceToCurrentItem(neighbourDistance);
 
-    if (neighbourIndex < 0 || neighbourIndex > _currentList.items.length - 1) {
+    if (neighbourIndex < 0 || neighbourIndex > _currentList.items!.length - 1) {
       //incorrect neighbour index quit
       return;
     }
-    _currentList.items[selectedItemIndex].updateOpacity(1.0);
-    _currentList.items[neighbourIndex].updateOpacity(0.5);
+    _currentList.items![selectedItemIndex].updateOpacity(1.0);
+    _currentList.items![neighbourIndex].updateOpacity(0.5);
 
-    _currentList.items[selectedItemIndex]
+    _currentList.items![selectedItemIndex]
         .updateScale(_calculateNewScale(neighbourDistanceToCurrentItem));
-    _currentList.items[neighbourIndex]
+    _currentList.items![neighbourIndex]
         .updateScale(_calculateNewScale(neighbourDistance.abs()));
   }
 
   double _calculateNewScale(double distance) =>
-      1.0 + distance / _currentList.items[lastSelectedItem].scaleFactor;
+      1.0 + distance / _currentList.items![lastSelectedItem].scaleFactor;
 
   int neighbourScrollDirection(double neighbourDistance) {
     int neighbourScrollDirection = 0;
@@ -310,7 +310,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   int _getCurrentListElementIndex(double scrollPixels) {
     int selectedElement = (scrollPixels / _currentList.itemHeight()).round();
-    final maxElementIndex = _currentList.items.length;
+    final maxElementIndex = _currentList.items!.length;
 
     if (selectedElement < 0) {
       selectedElement = 0;
@@ -358,14 +358,14 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     _currentList = visibleList;
     _currentScrollLocation = location;
     lastSelectedItem = _currentList.getSelectedItemIndex();
-    _currentList.items[lastSelectedItem].updateOpacity(1.0);
+    _currentList.items![lastSelectedItem].updateOpacity(1.0);
     isOverlayVisible = true;
     await fadeAnimationController.forward(from: 0.0);
   }
 
   void _hideListOverlay() {
     _scrollController.dispose();
-    _currentList.items[lastSelectedItem].updateScale(1.0);
+    _currentList.items![lastSelectedItem].updateScale(1.0);
     _currentScrollLocation = 0;
     _adjustedTopOffset = 0;
     isOverlayVisible = false;

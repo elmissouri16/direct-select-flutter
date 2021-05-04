@@ -23,7 +23,7 @@ typedef ItemSelected = Future<dynamic> Function(
 ///
 class DirectSelectList<T> extends StatefulWidget {
   ///Item widgets
-  final List<DirectSelectItem<T>> items;
+  final List<DirectSelectItem<T>>? items;
 
   ///Current focused item overlay
   final Decoration? focusedItemDecoration;
@@ -65,8 +65,8 @@ class DirectSelectList<T> extends StatefulWidget {
 
   //TODO pass item height in this class and build items with that height
   double itemHeight() {
-    if (items.isNotEmpty) {
-      return items.first.itemHeight;
+    if (items!.isNotEmpty) {
+      return items!.first.itemHeight;
     }
     return 0.0;
   }
@@ -82,7 +82,7 @@ class DirectSelectList<T> extends StatefulWidget {
   }
 
   T getSelectedItem() {
-    return items[selectedItem.value].value;
+    return items![selectedItem.value].value;
   }
 }
 
@@ -117,10 +117,10 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   void _updateSelectItemWidget() {
     selectedItemWidgets.clear();
-    for (int index = 0; index < widget.items.length; index++) {
+    for (int index = 0; index < widget.items!.length; index++) {
       selectedItemWidgets.putIfAbsent(
         index,
-        () => widget.items[index].getSelectedItem(
+        () => widget.items![index].getSelectedItem(
           animatedStateKey,
           widget.paddingItemController.paddingGlobalKey,
         ),
@@ -144,7 +144,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     widget.selectedItem.addListener(() {
       if (widget.onItemSelectedListener != null) {
         widget.onItemSelectedListener?.call(
-            widget.items[widget.selectedItem.value].value,
+            widget.items![widget.selectedItem.value].value,
             widget.selectedItem.value,
             this.context);
       }
